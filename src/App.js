@@ -1,5 +1,9 @@
 import './App.css';
 import data from './Data.js'
+import Album from './components/album';
+import Artists from './components/artists';
+import Button from './components/button';
+import Images from './components/images';
 
 function App() {
   return (
@@ -7,12 +11,11 @@ function App() {
       
       <header className="App-header">
       <fieldset>
-        <legend className='fieldset'> Module 2 Session 1 </legend>
-        <img src={data.album.images[0].url} className="App-logo" alt="logo" />
-        <p> {data.name} </p>
-        <p> {data.album.name} </p>
-        <p> {data.artists[0].name} </p>
-        <a class="btn" href={data.album.artists[0].external_urls.spotify}>Select</a>
+        <legend className='fieldset'> Module 2 Session 2 </legend>
+        <Images image={data.album.images[0].url} title={data.name} />
+        <Album  album={data.album.name}/>
+        <Artists artist={data.artists[0].name}/>
+        <Button tombol={data.album.artists[0].external_urls.spotify}/>
           </fieldset>
       </header>
       
