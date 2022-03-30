@@ -1,82 +1,50 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-   width: 350px;
-   height: 350px;
-   border-radius: 50%;
-}
-
-.App-header {
+.container {
+  max-width: 100%;
   background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+  color: aliceblue;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+#home {
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.content {
+  margin-top: 40px;
+  background-color: #282c34;
+  align-items: center;
+  justify-content: center;
 }
 
-.btn {
-  background-color: #4CAF50; /* Green */
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  column-gap: 20px;
+  row-gap: 40px;
+  justify-items: center;
+}
+
+input {
+  min-height: 44px;
+  border: 1px solid var(--gray);
   border-radius: 30px;
-  font-size: 16px;
-  transition-duration: 0.4s;
+  padding: 4px 16px;
+  outline: none;
+  transition: border .2s ease-in-out;
 }
 
-.btn:hover {
-  background-color: #4CAF50; /* Green */
-  color: white;
+input:focus {
+  border: 1px solid #0ccc7c;
 }
 
-table {
-  border-collapse: collapse;
-  width: 100%;
-  counter-reset: serial-number;
-}
-
-table, th, td {
-  border: 1px solid black;
-}
-th, td {
-  padding: 10px;
-}
-th {
-  background-color: rgb(19, 110, 170);
-  color: white;
-}
-tr:hover {background-color: #181a1f;}
-
-
-fieldset {
-  border: 1px solid #DDDDDD;
-  display: inline-block;
-  font-size: 30px;
-  font-family: Arial, Helvetica;
-}
-
-legend {
-  background: #BFD48C;     /* Hijau */
-  color: #030000;          /* Putih */
+.center {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  background-color: #282c34;
 }
