@@ -3,134 +3,141 @@ import Card from './components/Card';
 import SearchBar from './components/SearchBar';
 import Button from './components/Button';
 import { Component } from 'react';
+import React, { useEffect, useState } from 'react'
+import Track from './components/Track';
 
 
-export default class Home extends Component {
-  state = {
-    accessToken: '',
-    isAuthorize: false,
-    tracks: [],
-  }
+// export default class Home extends Component {
+//   state = {
+//     accessToken: '',
+//     isAuthorize: false,
+//     tracks: [],
+//   }
 
-  getHashParams() {
-    const hashParams = {};
-    const r = /([^&;=]+)=?([^&;]*)/g;
-    const q = window.location.hash.substring(1);
-    let e = r.exec(q);
+export default function Home() {
+  const [accessToken, setAccessToken] = useState('');
+  const [isAuthorize, setIsAuthorize] = useState(false);
+  const [tracks, setTracks] = useState([]);
+  const [selectedTracksUri, setSelectedTracksUri] = useState([]);
+  const [isInSearch, setIsInSearch] = useState(false);
 
-    while (e) {
-      hashParams[e[1]] = decodeURIComponent(e[2]);
-      e = r.exec(q);
+  // getHashParams() {
+  //   const hashParams = {};
+  //   const r = /([^&;=]+)=?([^&;]*)/g;
+  //   const q = window.location.hash.substring(1);
+  //   let e = r.exec(q);
+
+  //   while (e) {
+  //     hashParams[e[1]] = decodeURIComponent(e[2]);
+  //     e = r.exec(q);
+  //   }
+  //   return hashParams;
+  // }
+
+  // componentDidMount() {
+  //   const params = this.getHashParams();
+  //   const { access_token: accessToken } = params;
+
+  //   this.setState({ accessToken, isAuthorize: accessToken !== undefined })
+  // }
+
+  // getSpotifyLinkAuthorize() {
+  //   const state = Date.now().toString();
+  //   return `https://accounts.spotify.com/authorize?client_id=${process.env.REACT_APP_SPOTIFY_CLIENT_ID}&response_type=token&redirect_uri=http://localhost:3000&state=${state}&scope=playlist-modify-private`;
+  // }
+
+  // onSuccessSearch(tracks) {
+  //   this.setState({ tracks });
+  // }
+
+  useEffect(() => {
+    const accessToken = new URLSearchParams(window.location.hash).get('#access_token');
+
+    setAccessToken(accessToken);
+    setIsAuthorize(accessToken !== null);
+  }, []);
+
+  useEffect(() => {
+    if (!isInSearch) {
+      const selectedTracks = filterSelectedTracks();
+
+      setTracks(selectedTracks);
     }
-    return hashParams;
-  }
+  }, [selectedTracksUri]);
 
-  componentDidMount() {
-    const params = this.getHashParams();
-    const { access_token: accessToken } = params;
-
-    this.setState({ accessToken, isAuthorize: accessToken !== undefined })
-  }
-
-  getSpotifyLinkAuthorize() {
+  const getSpotifyLinkAuthorize = () => {
     const state = Date.now().toString();
+
     return `https://accounts.spotify.com/authorize?client_id=${process.env.REACT_APP_SPOTIFY_CLIENT_ID}&response_type=token&redirect_uri=http://localhost:3000&state=${state}&scope=playlist-modify-private`;
   }
 
-  onSuccessSearch(tracks) {
-    this.setState({ tracks });
+  const filterSelectedTracks = () => {
+    return tracks.filter((track) => selectedTracksUri.includes(track.uri));
   }
 
-  render() {
-    return (
-      <>
-        {!this.state.isAuthorize && (
-          <main className="center">
-            <fieldset>
-              <legend>Homework</legend>
-            <p>Klik login untuk melanjutkan ...</p>
-            <Button href={this.getSpotifyLinkAuthorize()}>LOGIN</Button>
-            </fieldset>
-          </main>
-        )}
+  const onSuccessSearch = (searchTracks) => {
+    setIsInSearch(true);
+    const selectedTracks = filterSelectedTracks();
+    const searchDistincTracks = searchTracks.filter((track) => !selectedTracksUri.includes(track.uri));
 
-        {this.state.isAuthorize && (
-          <main className="container">
-            <SearchBar
-              accessToken={this.state.accessToken}
-              onSuccess={(tracks) => this.onSuccessSearch(tracks)}
-            />
-
-            <div className="content">
-              {this.state.tracks.length === 0 && (
-                <p>No tracks</p>
-              )}
-              
-
-              <div className="cards">
-                {this.state.tracks.map((song) => (
-                  <Card
-                    key={song.id}
-                    imageUrl={song.album.images[0].url}
-                    title={song.name}
-                    artist={song.artists[0].name}
-                  />
-                ))}
-              </div>
-            </div>
-          </main>
-        )}
-      </>
-    );
+    setTracks([...selectedTracks, ...searchDistincTracks]);
   }
-}
 
-// const Row = ({ url, title, artist , album}) => {
-//   return (
+
+  const clearSearch = () => {
+    const selectedTracks = filterSelectedTracks();
     
-//           <tr>
-//             <td>{album}</td>
-//             <td>{title}</td>
-//             <td>{artist}</td>
-//             <td><img src={url} alt=""  height='100' width='100' /></td>
-//           </tr>
-//   )
-// }
-
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//       <fieldset>
-//         <legend className='fieldset'> Homework </legend>
-//         {/* <Images image={data.album.images[0].url} title={data.name} />
-//         <Album  album={data.album.name}/>
-//         <Artists artist={data.artists[0].name}/>
-//         <Button tombol={data.album.artists[0].external_urls.spotify}/> */}
-
-//         <table> 
-//           <tr>
-//             <th>Album</th>
-//             <th>Title</th>
-//             <th>Artist</th>
-//             <th>Image</th>
-//           </tr>
-        
-//         {
-//            data //.filter(item => item.rating !== "g")
-//           .map(item => {
-//             return (
-//               <Row key="" url={item.album.images[0].url} title={item.name} album={item.album.name} artist={item.artists[0].name} />
-//             )
-//           })
-//         }
-                  
-//       </table>
+    setTracks(selectedTracks);
+    setIsInSearch(false);
+  }
 
 
-//           </fieldset>
-//       </header>
-      
-//     </div>
-//   );
-// }
+  const toggleSelect = (track) => {
+    const uri = track.uri;
+
+    if (selectedTracksUri.includes(uri)) {
+      setSelectedTracksUri(selectedTracksUri.filter((item) => item !== uri));
+    } else {
+      setSelectedTracksUri([...selectedTracksUri, uri]);
+    }
+  }
+
+  return (
+    <>
+      {!isAuthorize && (
+        <main className="center">
+          <p>Login for next step...</p>
+          <Button href={getSpotifyLinkAuthorize()}>Authorize</Button>
+        </main>
+      )}
+
+      {isAuthorize && (
+        <main className="container" id="home">
+          <SearchBar
+            accessToken={accessToken}
+            onSuccess={(tracks) => onSuccessSearch(tracks)}
+            onClearSearch={clearSearch}
+          />
+
+          <div className="content">
+            {tracks.length === 0 && (
+              <p>No tracks</p>
+            )}
+
+            <div className="tracks">
+              {tracks.map((track) => (
+                <Track
+                  key={track.id}
+                  imageUrl={track.album.images[0].url}
+                  title={track.name}
+                  artist={track.artists[0].name}
+                  toggleSelect={() => toggleSelect(track)}
+                />
+              ))}
+            </div>
+          </div>
+        </main>
+      )}
+    </>
+  );
+}
