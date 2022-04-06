@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Button from '../Button';
 import './index.css';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 
 
 // const handleInput = (e) => {
@@ -55,7 +56,8 @@ import PropTypes from 'prop-types';
 // onClearSearch: PropTypes.func.isRequired,
 // }
 
-export default function SearchBar({ accessToken, onSuccess, onClearSearch }) {
+export default function SearchBar({ onSuccess, onClearSearch }) {
+  const accessToken = useSelector((state) => state.auth.accessToken);
   const [text, setText] = useState('');
   const [isClear, setIsClear] = useState(true);
 
@@ -113,7 +115,6 @@ export default function SearchBar({ accessToken, onSuccess, onClearSearch }) {
 }
 
 SearchBar.propTypes = {
-  accessToken: PropTypes.string.isRequired,
   onSuccess: PropTypes.func.isRequired,
   onClearSearch: PropTypes.func.isRequired,
 }
