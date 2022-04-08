@@ -7,6 +7,7 @@ import InputGroup from '../InputGroup';
 import './index.css';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
+import { logout } from '../../slice/authSlice';
 
 export default function CreatePlaylistForm({ uriTracks }) {
   const accessToken = useSelector((state) => state.auth.accessToken);
@@ -67,7 +68,11 @@ export default function CreatePlaylistForm({ uriTracks }) {
 
           setForm({ title: '', description: '' });
         } catch (error) {
+          if (error.response.status === 401) {
+            dispatch(logout());
+          } else {
           toast.error(error);
+          }
         }
       } else {
         toast.error('Please select at least one track');

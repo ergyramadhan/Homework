@@ -1,11 +1,4 @@
-// function Button ({tombol}) {
-//     return (
-//         <a class="btn" href={tombol}>Select</a>
-//     )
-// }
-
-// export default Button;
-
+import { Link } from 'react-router-dom';
 import React from 'react'
 import './index.css'
 import PropTypes from 'prop-types'
@@ -23,10 +16,16 @@ export default function Button({ children, type, variant, className, onClick, hr
   }
 
   if (href) {
-    classButton.push('btn--link')
+    classButton.push('btn--link');
 
+    if (external) {
+      return (
+        <a href={href} className={classButton.join(' ')}>{children}</a>
+      )
+    }
+    
     return (
-      <a href={href} className={classButton.join(' ')}>{children}</a>
+      <Link to={href} className={classButton.join(' ')}>{children}</Link>
     )
   }
 
@@ -34,7 +33,6 @@ export default function Button({ children, type, variant, className, onClick, hr
     <button type={type} className={classButton.join(' ')} onClick={onClick}>{children}</button>
   )
 }
-
 Button.defaultProps = {
   type: 'button',
   className: '',
